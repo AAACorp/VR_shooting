@@ -8,7 +8,7 @@ using Valve.VR.InteractionSystem;
 
 public class ExampleWeapon : MonoBehaviour
 {
-
+    //delete this (to test)
     GameObject Barrel;
     GameObject bullet;//префаб пули
     int damage; //из инспектора на каждом оружии прописываем его урон
