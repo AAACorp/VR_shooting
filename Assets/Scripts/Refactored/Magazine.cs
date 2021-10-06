@@ -4,15 +4,21 @@ using UnityEngine;
 
 public class Magazine : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private int _ammo = 0;
+    public int GetAmmo()
     {
-        
+        return _ammo;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void DecreaseAmmo()
     {
-        
+        _ammo--;
     }
+
+    float DistanceFromMagToPlace(GameObject magazine, GameObject PlaceForMag)
+    {
+        float dist = Vector3.Distance(PlaceForMag.transform.position, magazine.transform.position);
+        return dist;
+    }
+
 }

@@ -6,7 +6,7 @@ public class BulletNew : MonoBehaviour
 {
     int _damage;
 
-    void SetDamage(int _dam)
+    public void SetDamage(int _dam)
     {
         _damage = _dam;
     }
