@@ -13,8 +13,7 @@ public class ExampleWeapon : MonoBehaviour
     [SerializeField] private GameObject bulletPrefab;//префаб пули
     [SerializeField] private int _damage; //из инспектора на каждом оружии прописываем его урон
     [SerializeField] private float fireRate; //в миллисекундах, для каждого оружия из инспектора будем прописывать частоту (раз в сколько миллисек может стрелять)
-    [SerializeField] private int weaponType; //какой тип оружия, из описанных выше
-    //bool canShoot;//можем ли стрелять - меняется когда кулдаун проходит. Еще и надо проверить, есть ли магазин, есть ли в нем патроны, перезаряжено ли оружие
+    [SerializeField] private int _weaponId; //какой тип оружия, из описанных выше
 
     private Interactable interactable;
     public SteamVR_Behaviour_Pose Pos = null; // Хранит правый контроллер - поле назначается из редактора Unity
@@ -27,7 +26,7 @@ public class ExampleWeapon : MonoBehaviour
     private float nextShootTime;
     private bool pressedButton;
 
-    int _minCorner = -8, _maxCorner = 8;
+    int _minCorner = -8, _maxCorner = 8; //для отдачи
     int _bulletSpeed = 500;
 
     private void Update()
@@ -36,7 +35,7 @@ public class ExampleWeapon : MonoBehaviour
         {
             if (GetComponentInParent(typeof(Valve.VR.InteractionSystem.Hand)) as Valve.VR.InteractionSystem.Hand)
             {
-                switch (weaponType)
+                switch (_weaponId)
                 {
                     case 1:
                         if (CheckOfPossibilityShoot())
@@ -63,14 +62,16 @@ public class ExampleWeapon : MonoBehaviour
                 }
             }
         }
-       
+
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            
+        }
+
         pressedButton = false;
     }
 
-    private bool CheckOfPossibilityShoot() //тут должна быть проверка на кд, перезаряжено ли оружие, есть ли магазин в оружии, и есть ли вообще патроны в магазине.
-                                   //Опять же, здесь нужно знать тип оружия, потому что у какого-то оружия нет кд. А у некоторых(2 и 3) нужно проверять
-                                   //отпустили ли кнопку и только потом можно нажать. Что у всех общее? Перезаряжено ли оружие, есть ли магаз и патроны - общее.
-                                   //Для начала проверить общее, а потом частное. Пока без дробовиков.
+    private bool CheckOfPossibilityShoot() //пока без дробовиков
     {
         if (hasSlide)
         {
@@ -78,7 +79,7 @@ public class ExampleWeapon : MonoBehaviour
             {
                 if (magazine.GetComponent<Magazine>().GetAmmo() > 0)
                 {
-                    switch (weaponType)
+                    switch (_weaponId)
                     {
                         case 1: //auto
                             if (Time.time > nextShootTime) return true;
@@ -122,6 +123,11 @@ public class ExampleWeapon : MonoBehaviour
     public void NegativeSlide()
     {
         hasSlide = false;
+    }
+
+    public int GetWeaponId()
+    {
+        return _weaponId;
     }
 
     private void Recoil(Transform barrelLocation)

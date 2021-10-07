@@ -5,16 +5,35 @@ using UnityEngine;
 public class ReloadSystem : MonoBehaviour
 {
     private bool magazineInSlot = true;
+    [SerializeField] private GameObject magazineInWeapon;
 
-    public void Detach(GameObject magazine)
+    private void OnTriggerEnter(Collider other)
     {
-        if (magazineInSlot)
+        if(other.TryGetComponent(out Magazine magazineComp))
         {
-            magazine.GetComponent<Rigidbody>().isKinematic = false;
-            magazine.transform.SetParent(null);
+            ExampleWeapon exmWeapon = GetComponentInParent(typeof(ExampleWeapon)) as ExampleWeapon;
+            if(exmWeapon.GetWeaponId() == magazineComp.GetWeaponId())
+            {
+                AttachMagazine();
+            }
+        }
+    }
+
+    public void Detach()
+    {
+        if (magazineInWeapon != null)
+        {
+            magazineInWeapon.GetComponent<Rigidbody>().isKinematic = false;
+            magazineInWeapon.transform.SetParent(null);
             ExampleWeapon exmWeapon = GetComponentInParent(typeof(ExampleWeapon)) as ExampleWeapon;
             exmWeapon.NegativeSlide();
+            magazineInWeapon = null;
         }
+    }
+
+    private void AttachMagazine()
+    {
+
     }
 
     private float DistanceFromMagToPlace(GameObject magazine, GameObject PlaceForMag)
