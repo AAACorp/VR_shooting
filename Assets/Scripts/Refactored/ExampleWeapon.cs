@@ -33,7 +33,7 @@ public class ExampleWeapon : MonoBehaviour
     { //OnPress only for Semi-Auto
         if (buttonGrabPinch.GetStateDown(Pos.inputSource))
         {
-            if (GetComponentInParent(typeof(Valve.VR.InteractionSystem.Hand)) as Valve.VR.InteractionSystem.Hand)
+            if (GetComponentInParent(typeof(Valve.VR.InteractionSystem.Hand)) as Valve.VR.InteractionSystem.Hand) //getComp to TryGet
             {
                 switch (_weaponId)
                 {

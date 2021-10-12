@@ -5,41 +5,38 @@ using UnityEngine;
 public class ReloadSystem : MonoBehaviour
 {
     private bool magazineInSlot = true;
-    [SerializeField] private GameObject magazineInWeapon;
+    [SerializeField] private Transform connectPoint;
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.TryGetComponent(out Magazine magazineComp))
+        if(magazineInSlot == false)
         {
-            ExampleWeapon exmWeapon = GetComponentInParent(typeof(ExampleWeapon)) as ExampleWeapon;
-            if(exmWeapon.GetWeaponId() == magazineComp.GetWeaponId())
+            if (other.TryGetComponent(out Magazine magazineComp))
             {
-                AttachMagazine();
+                ExampleWeapon exmWeapon = GetComponentInParent(typeof(ExampleWeapon)) as ExampleWeapon;
+                if (exmWeapon.GetWeaponId() == magazineComp.GetWeaponId())
+                {
+                    AttachMagazine(connectPoint, other.gameObject);
+                }
             }
         }
     }
 
-    public void Detach()
+    public Vector3 GetPointToAttach()
     {
-        if (magazineInWeapon != null)
-        {
-            magazineInWeapon.GetComponent<Rigidbody>().isKinematic = false;
-            magazineInWeapon.transform.SetParent(null);
-            ExampleWeapon exmWeapon = GetComponentInParent(typeof(ExampleWeapon)) as ExampleWeapon;
-            exmWeapon.NegativeSlide();
-            magazineInWeapon = null;
-        }
+        return connectPoint.position;
     }
 
-    private void AttachMagazine()
+    public void SetSlotFalse()
     {
-
+        magazineInSlot = false;
     }
 
-    private float DistanceFromMagToPlace(GameObject magazine, GameObject PlaceForMag)
+    private void AttachMagazine(Transform pointToAttach, GameObject nonConnectedMagazine)
     {
-        float dist = Vector3.Distance(PlaceForMag.transform.position, magazine.transform.position);
-        return dist;
+        nonConnectedMagazine.transform.SetParent(transform.parent);
+        nonConnectedMagazine.transform.position = pointToAttach.position;
+        nonConnectedMagazine.transform.rotation = pointToAttach.rotation;
+        magazineInSlot = true;
     }
-
 }

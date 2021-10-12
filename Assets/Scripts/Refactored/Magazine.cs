@@ -6,7 +6,48 @@ public class Magazine : MonoBehaviour
 {
     [SerializeField] private int _ammo = 0;
     [SerializeField] private int _weaponId = 0; //идентификатор оружия, чтобы знать к кому подключать 
-    private bool isCanToAttach;
+    //private bool isCanToAttach; сделать из этого функцию
+    private bool magazineInWeapon = false;
+    private GameObject ReloadCollider;
+
+    private void Start()
+    {
+        if (transform.parent.TryGetComponent(out ExampleWeapon exmWeapon)) 
+        {
+            magazineInWeapon = true;
+
+            for (int i = 0; i < transform.parent.childCount; i++)
+            {
+                if (transform.parent.GetChild(i).TryGetComponent(out ReloadSystem reloadSystem))
+                {
+                    ReloadCollider = transform.parent.GetChild(i).gameObject;
+                }
+                else ReloadCollider = null;
+            }
+        }
+    }
+
+    private void Update()
+    {
+        if(magazineInWeapon)
+        {
+            if (transform.parent)
+            {
+                if (DistanceFromMagToPlace(transform, ReloadCollider.GetComponent<ReloadSystem>().GetPointToAttach()) >= 0.8f)
+                {
+                    magazineInWeapon = false;
+                    ReloadCollider.GetComponent<ReloadSystem>().SetSlotFalse();
+                    ReloadCollider = null;
+                }
+            }
+                
+        }
+        else if(_ammo == 0)
+        {
+            Destroy(gameObject, 4f);
+        }
+    }
+
     public int GetAmmo()
     {
         return _ammo;
@@ -22,9 +63,20 @@ public class Magazine : MonoBehaviour
         _ammo--;
     }
 
-    float DistanceFromMagToPlace(GameObject magazine, GameObject PlaceForMag)
+    public void Detach()
     {
-        float _dist = Vector3.Distance(PlaceForMag.transform.position, magazine.transform.position);
+        if (magazineInWeapon)
+        {
+            gameObject.GetComponent<Rigidbody>().isKinematic = false;
+            ExampleWeapon exmWeapon = GetComponentInParent(typeof(ExampleWeapon)) as ExampleWeapon;
+            exmWeapon.NegativeSlide();
+            transform.SetParent(null);
+        }
+    }
+
+    private float DistanceFromMagToPlace(Transform magazine, Vector3 PlaceForMag)
+    {
+        float _dist = Vector3.Distance(PlaceForMag, magazine.position);
         return _dist;
     }
 
