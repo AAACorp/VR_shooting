@@ -17,6 +17,7 @@ public class ReloadSystem : MonoBehaviour
                 if (exmWeapon.GetWeaponId() == magazineComp.GetWeaponId())
                 {
                     AttachMagazine(connectPoint, other.gameObject);
+                    exmWeapon.SetMagazine(other.gameObject);
                 }
             }
         }
@@ -35,8 +36,10 @@ public class ReloadSystem : MonoBehaviour
     private void AttachMagazine(Transform pointToAttach, GameObject nonConnectedMagazine)
     {
         nonConnectedMagazine.transform.SetParent(transform.parent);
+        nonConnectedMagazine.GetComponent<Rigidbody>().isKinematic = true;
         nonConnectedMagazine.transform.position = pointToAttach.position;
         nonConnectedMagazine.transform.rotation = pointToAttach.rotation;
         magazineInSlot = true;
+        nonConnectedMagazine.GetComponent<Magazine>().SetMagazineInWeapon();
     }
 }

@@ -12,39 +12,52 @@ public class Magazine : MonoBehaviour
 
     private void Start()
     {
-        if (transform.parent.TryGetComponent(out ExampleWeapon exmWeapon)) 
+        if (transform.parent)
         {
             magazineInWeapon = true;
-
-            for (int i = 0; i < transform.parent.childCount; i++)
-            {
-                if (transform.parent.GetChild(i).TryGetComponent(out ReloadSystem reloadSystem))
-                {
-                    ReloadCollider = transform.parent.GetChild(i).gameObject;
-                }
-                else ReloadCollider = null;
-            }
+            SetReloadCollider();
         }
+        else magazineInWeapon = false;
     }
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Y)) Debug.Log(ReloadCollider);
         if(magazineInWeapon)
         {
-            if (transform.parent)
+            if(transform.parent)
             {
+                Debug.Log("Pipec");
                 if (DistanceFromMagToPlace(transform, ReloadCollider.GetComponent<ReloadSystem>().GetPointToAttach()) >= 0.8f)
                 {
                     magazineInWeapon = false;
                     ReloadCollider.GetComponent<ReloadSystem>().SetSlotFalse();
                     ReloadCollider = null;
+                    transform.SetParent(null);
                 }
-            }
-                
+            }  
         }
         else if(_ammo == 0)
         {
             Destroy(gameObject, 4f);
+        }
+    }
+
+    private void SetReloadCollider()
+    {
+        for (int i = 0; i < transform.parent.childCount; i++)
+        {
+            if (transform.parent.GetChild(i).TryGetComponent(out ReloadSystem reloadSystem))
+            {
+                ReloadCollider = transform.parent.GetChild(i).gameObject;
+                Debug.Log("Norm");
+            }
+            else
+            {
+                ReloadCollider = null;
+                Debug.Log("Ne norm");
+            }
+            
         }
     }
 
@@ -56,6 +69,12 @@ public class Magazine : MonoBehaviour
     public int GetWeaponId()
     {
         return _weaponId;
+    }
+
+    public void SetMagazineInWeapon()
+    {
+        magazineInWeapon = true;
+        SetReloadCollider();
     }
 
     public void DecreaseAmmo()
@@ -71,7 +90,6 @@ public class Magazine : MonoBehaviour
             ExampleWeapon exmWeapon = GetComponentInParent(typeof(ExampleWeapon)) as ExampleWeapon;
             exmWeapon.NegativeSlide();
             exmWeapon.ClearMagazineSlot();
-            transform.SetParent(null);
         }
     }
 

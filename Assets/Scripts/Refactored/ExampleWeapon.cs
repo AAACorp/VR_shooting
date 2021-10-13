@@ -40,7 +40,7 @@ public class ExampleWeapon : MonoBehaviour
 
     private void Update()
     {
-        if (/*buttonGrabPinch.GetStateDown(Pos.inputSource)*/ Input.GetKeyDown(KeyCode.Space))
+        if (/*buttonGrabPinch.GetStateDown(Pos.inputSource)*/ Input.GetKey(KeyCode.Space))
         {
             Debug.Log("Pressed Space");
             if (transform.parent.TryGetComponent(out Valve.VR.InteractionSystem.Hand handScript))
@@ -81,9 +81,9 @@ public class ExampleWeapon : MonoBehaviour
             magazine.GetComponent<Magazine>().Detach();
         }
 
-        if (Input.GetKeyDown(KeyCode.T)) Debug.Log(transform.parent.name);
+        if (Input.GetKeyDown(KeyCode.T)) Debug.Log(hasSlide);
 
-        if(Input.GetKeyUp(KeyCode.Space)) pressedButton = false;
+        if (Input.GetKeyUp(KeyCode.Space)) pressedButton = false;
     }
 
     private bool CheckOfPossibilityShoot() //пока без дробовиков
@@ -125,7 +125,7 @@ public class ExampleWeapon : MonoBehaviour
         GameObject tempBullet = Instantiate(bullet, BarrelLocation.position, BarrelLocation.rotation * Quaternion.identity);
         bullet.GetComponent<BulletNew>().SetDamage(_damage);
         tempBullet.GetComponent<Rigidbody>().AddForce(-BarrelLocation.right * _bulletSpeed);
-        Recoil(BarrelLocation);
+        Recoil(transform);
         magazine.GetComponent<Magazine>().DecreaseAmmo();
         //flash, sound
     }
@@ -133,6 +133,11 @@ public class ExampleWeapon : MonoBehaviour
     public void ClearMagazineSlot()
     {
         magazine = null;
+    }
+
+    public void SetMagazine(GameObject mag)
+    {
+        magazine = mag;
     }
 
     public void Slide()
