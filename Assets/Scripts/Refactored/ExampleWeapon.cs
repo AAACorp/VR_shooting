@@ -8,7 +8,6 @@ using Valve.VR.InteractionSystem;
 
 public class ExampleWeapon : MonoBehaviour
 {
-    //delete this (to test)
     [SerializeField] private Transform BarrelLocation;
     [SerializeField] private GameObject bulletPrefab;//префаб пули
     [SerializeField] private int _damage; //из инспектора на каждом оружии прописываем его урон
@@ -21,25 +20,39 @@ public class ExampleWeapon : MonoBehaviour
     private SteamVR_Action_Boolean buttonGrabGrip = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("GrabGrip");
     bool OnPress;
 
-    private bool hasSlide;
-    [SerializeField] private GameObject magazine;
+    private bool hasSlide = true;
+    private GameObject magazine;
     private float nextShootTime;
     private bool pressedButton;
 
-    int _minCorner = -8, _maxCorner = 8; //для отдачи
+    int _minCorner = 1, _maxCorner = 8; //для отдачи
     int _bulletSpeed = 500;
 
-    private void Update()
-    { //OnPress only for Semi-Auto
-        if (buttonGrabPinch.GetStateDown(Pos.inputSource))
+    private void Start()
+    {
+        //поиск по детям с компонентом магазин в magazine
+        for(int i = 0; i < transform.childCount; i++)
         {
-            if (GetComponentInParent(typeof(Valve.VR.InteractionSystem.Hand)) as Valve.VR.InteractionSystem.Hand) //getComp to TryGet
+            if (transform.GetChild(i).TryGetComponent(out Magazine _))
+                magazine = transform.GetChild(i).gameObject;
+        }
+    }
+
+    private void Update()
+    {
+        if (/*buttonGrabPinch.GetStateDown(Pos.inputSource)*/ Input.GetKeyDown(KeyCode.Space))
+        {
+            Debug.Log("Pressed Space");
+            if (transform.parent.TryGetComponent(out Valve.VR.InteractionSystem.Hand handScript))
             {
+                Debug.Log("Getted Component");
                 switch (_weaponId)
                 {
                     case 1:
+                        Debug.Log("Try to check possibity to shoot");
                         if (CheckOfPossibilityShoot())
                         {
+                            Debug.Log("Checcked");
                             Shoot(bulletPrefab);
                             nextShootTime = Time.time + 1f / fireRate;
                         }
@@ -65,10 +78,12 @@ public class ExampleWeapon : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.R))
         {
-            
+            magazine.GetComponent<Magazine>().Detach();
         }
 
-        pressedButton = false;
+        if (Input.GetKeyDown(KeyCode.T)) Debug.Log(transform.parent.name);
+
+        if(Input.GetKeyUp(KeyCode.Space)) pressedButton = false;
     }
 
     private bool CheckOfPossibilityShoot() //пока без дробовиков
@@ -113,6 +128,11 @@ public class ExampleWeapon : MonoBehaviour
         Recoil(BarrelLocation);
         magazine.GetComponent<Magazine>().DecreaseAmmo();
         //flash, sound
+    }
+
+    public void ClearMagazineSlot()
+    {
+        magazine = null;
     }
 
     public void Slide()

@@ -117,7 +117,7 @@ public class BulletDestroy : MonoBehaviour
         gameObject.transform.SetParent(contactPoint.otherCollider.transform);
 
         //Debug
-        txtForBulColl.text = "Попали в " + collision.collider.name;
+        //txtForBulColl.text = "Попали в " + collision.collider.name;
         //
 
         if (collision.collider.tag == "Enemy")

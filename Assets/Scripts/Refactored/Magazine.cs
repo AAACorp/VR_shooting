@@ -70,6 +70,7 @@ public class Magazine : MonoBehaviour
             gameObject.GetComponent<Rigidbody>().isKinematic = false;
             ExampleWeapon exmWeapon = GetComponentInParent(typeof(ExampleWeapon)) as ExampleWeapon;
             exmWeapon.NegativeSlide();
+            exmWeapon.ClearMagazineSlot();
             transform.SetParent(null);
         }
     }
