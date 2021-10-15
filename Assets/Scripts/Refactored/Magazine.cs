@@ -22,7 +22,7 @@ public class Magazine : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Y)) Debug.Log(ReloadCollider);
+        if (Input.GetKeyDown(KeyCode.Y)) Debug.Log(name + ReloadCollider);
         if(magazineInWeapon)
         {
             if(transform.parent)
@@ -30,6 +30,7 @@ public class Magazine : MonoBehaviour
                 Debug.Log("Pipec");
                 if (DistanceFromMagToPlace(transform, ReloadCollider.GetComponent<ReloadSystem>().GetPointToAttach()) >= 0.8f)
                 {
+                    Debug.Log("Kek");
                     magazineInWeapon = false;
                     ReloadCollider.GetComponent<ReloadSystem>().SetSlotFalse();
                     ReloadCollider = null;
@@ -51,13 +52,7 @@ public class Magazine : MonoBehaviour
             {
                 ReloadCollider = transform.parent.GetChild(i).gameObject;
                 Debug.Log("Norm");
-            }
-            else
-            {
-                ReloadCollider = null;
-                Debug.Log("Ne norm");
-            }
-            
+            }    
         }
     }
 

@@ -10,9 +10,16 @@ public class BulletNew : MonoBehaviour
     {
         _damage = _dam;
     }
-    void OnColliderEnter(Collider col)// исходя из mode рассчитать урон по col
+
+    void OnCollisionEnter(Collision col)// исходя из mode рассчитать урон по col
     {
-        col.TryGetComponent(out EnemyNew enem); 
-        enem.GetDamage(_damage); //если будет компонент энеми, значит это враг, если нет, то просто на месте удара сделать дырку или что-то типа того
+        if (col.gameObject.TryGetComponent(out EnemyNew enem))
+        {
+            enem.GetDamage(_damage); //если будет компонент энеми, значит это враг, если нет, то просто на месте удара сделать дырку или что-то типа того
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 }

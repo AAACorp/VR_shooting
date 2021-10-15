@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2397417041805793750}
   - component: {fileID: 4608076810835300913}
   - component: {fileID: 5556562992529331589}
+  - component: {fileID: 2813947270972634802}
   m_Layer: 0
   m_Name: Rifle1_CasingPref
   m_TagString: Untagged
@@ -96,3 +97,16 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &2813947270972634802
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3669752227959138361}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.0004815732, y: 0.000109903616, z: 0.000109903565}
+  m_Center: {x: 0.000023741813, y: -3.6379782e-12, z: -3.637978e-11}

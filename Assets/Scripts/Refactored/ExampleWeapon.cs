@@ -13,6 +13,9 @@ public class ExampleWeapon : MonoBehaviour
     [SerializeField] private int _damage; //из инспектора на каждом оружии прописываем его урон
     [SerializeField] private float fireRate; //в миллисекундах, для каждого оружия из инспектора будем прописывать частоту (раз в сколько миллисек может стрелять)
     [SerializeField] private int _weaponId; //какой тип оружия, из описанных выше
+    [SerializeField] private GameObject casingPrefab;
+    [SerializeField] private Transform casingExitLocation;
+    private float _ejectPower = 150f;
 
     private Interactable interactable;
     public SteamVR_Behaviour_Pose Pos = null; // Хранит правый контроллер - поле назначается из редактора Unity
@@ -20,9 +23,10 @@ public class ExampleWeapon : MonoBehaviour
     private SteamVR_Action_Boolean buttonGrabGrip = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("GrabGrip");
     bool OnPress;
 
+    [SerializeField] private Animator gunAnimator;
     private bool hasSlide = true;
     private GameObject magazine;
-    private float nextShootTime;
+    private float _nextShootTime;
     private bool pressedButton;
 
     int _minCorner = 1, _maxCorner = 8; //для отдачи
@@ -36,54 +40,58 @@ public class ExampleWeapon : MonoBehaviour
             if (transform.GetChild(i).TryGetComponent(out Magazine _))
                 magazine = transform.GetChild(i).gameObject;
         }
+        gunAnimator = GetComponent<Animator>();
     }
 
     private void Update()
     {
-        if (/*buttonGrabPinch.GetStateDown(Pos.inputSource)*/ Input.GetKey(KeyCode.Space))
+        if (buttonGrabPinch.GetStateDown(Pos.inputSource) || Input.GetKey(KeyCode.Space))
         {
-            Debug.Log("Pressed Space");
-            if (transform.parent.TryGetComponent(out Valve.VR.InteractionSystem.Hand handScript))
+            if(transform.parent)
             {
-                Debug.Log("Getted Component");
-                switch (_weaponId)
+                if (transform.parent.TryGetComponent(out Valve.VR.InteractionSystem.Hand _))
                 {
-                    case 1:
-                        Debug.Log("Try to check possibity to shoot");
-                        if (CheckOfPossibilityShoot())
-                        {
-                            Debug.Log("Checcked");
-                            Shoot(bulletPrefab);
-                            nextShootTime = Time.time + 1f / fireRate;
-                        }
-                        break;
-                    case 2:
-                        if (CheckOfPossibilityShoot())
-                        {
-                            Shoot(bulletPrefab);
-                            pressedButton = true;
-                        }
-                        break;
-                    case 3:
-                        if (CheckOfPossibilityShoot())
-                        {
-                            Shoot(bulletPrefab);
-                            hasSlide = false;
-                            pressedButton = true;
-                        }
-                        break;
+                    switch (_weaponId)
+                    {
+                        case 1:
+                            if (CheckOfPossibilityShoot())
+                            {
+                                gunAnimator.SetTrigger("Fire");
+                                _nextShootTime = Time.time + 1f / fireRate;
+                            }
+                            break;
+                        case 2:
+                            if (CheckOfPossibilityShoot())
+                            {
+                                gunAnimator.SetTrigger("Fire");
+                                pressedButton = true;
+                            }
+                            break;
+                        case 3:
+                            if (CheckOfPossibilityShoot())
+                            {
+                                gunAnimator.SetTrigger("Fire");
+                                hasSlide = false;
+                                pressedButton = true;
+                            }
+                            break;
+                    }
                 }
-            }
+            } 
         }
 
-        if(Input.GetKeyDown(KeyCode.R))
+        if(buttonGrabGrip.GetStateDown(Pos.inputSource) || Input.GetKeyDown(KeyCode.R)) // вдруг уже нету магаза
         {
-            magazine.GetComponent<Magazine>().Detach();
+            if(magazine)
+            {
+                magazine.GetComponent<Magazine>().Detach();
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.T)) Debug.Log(hasSlide);
 
-        if (Input.GetKeyUp(KeyCode.Space)) pressedButton = false;
+        //if (Input.GetKeyUp(KeyCode.Space)) pressedButton = false;
+        if (buttonGrabPinch.GetStateUp(Pos.inputSource)) pressedButton = false;
     }
 
     private bool CheckOfPossibilityShoot() //пока без дробовиков
@@ -97,7 +105,7 @@ public class ExampleWeapon : MonoBehaviour
                     switch (_weaponId)
                     {
                         case 1: //auto
-                            if (Time.time > nextShootTime) return true;
+                            if (Time.time > _nextShootTime) return true;
                             else return false;
                         case 2: //semi-auto
                             if (pressedButton == false) return true;
@@ -123,11 +131,20 @@ public class ExampleWeapon : MonoBehaviour
     private void Shoot(GameObject bullet)
     {
         GameObject tempBullet = Instantiate(bullet, BarrelLocation.position, BarrelLocation.rotation * Quaternion.identity);
-        bullet.GetComponent<BulletNew>().SetDamage(_damage);
-        tempBullet.GetComponent<Rigidbody>().AddForce(-BarrelLocation.right * _bulletSpeed);
+        tempBullet.GetComponent<BulletNew>().SetDamage(_damage);
+        tempBullet.GetComponent<Rigidbody>().AddForce(BarrelLocation.right * _bulletSpeed);
         Recoil(transform);
         magazine.GetComponent<Magazine>().DecreaseAmmo();
         //flash, sound
+    }
+
+    private void CasingRelease()
+    {
+        GameObject tempCasing;
+        tempCasing = Instantiate(casingPrefab, casingExitLocation.position, casingExitLocation.rotation) as GameObject;
+        tempCasing.GetComponent<Rigidbody>().AddExplosionForce(Random.Range(_ejectPower * 0.7f, _ejectPower), (casingExitLocation.position - casingExitLocation.right * 0.3f - casingExitLocation.up * 0.6f), 1f);
+        tempCasing.GetComponent<Rigidbody>().AddTorque(new Vector3(0, Random.Range(100f, 500f), Random.Range(100f, 1000f)), ForceMode.Impulse);
+        Destroy(tempCasing, 5);
     }
 
     public void ClearMagazineSlot()
@@ -157,7 +174,7 @@ public class ExampleWeapon : MonoBehaviour
 
     private void Recoil(Transform barrelLocation)
     {
-        barrelLocation.localRotation = Quaternion.Euler(barrelLocation.localRotation.x + Random.Range(_minCorner, _maxCorner),
+        barrelLocation.localRotation = Quaternion.Euler(barrelLocation.localRotation.x,
                                                         barrelLocation.localRotation.y + Random.Range(_minCorner, _maxCorner),
                                                         barrelLocation.localRotation.z + Random.Range(_minCorner, _maxCorner));
     }
