@@ -27,10 +27,8 @@ public class Magazine : MonoBehaviour
         {
             if(transform.parent)
             {
-                Debug.Log("Pipec");
                 if (DistanceFromMagToPlace(transform, ReloadCollider.GetComponent<ReloadSystem>().GetPointToAttach()) >= 0.8f)
                 {
-                    Debug.Log("Kek");
                     magazineInWeapon = false;
                     ReloadCollider.GetComponent<ReloadSystem>().SetSlotFalse();
                     ReloadCollider = null;
@@ -51,7 +49,6 @@ public class Magazine : MonoBehaviour
             if (transform.parent.GetChild(i).TryGetComponent(out ReloadSystem reloadSystem))
             {
                 ReloadCollider = transform.parent.GetChild(i).gameObject;
-                Debug.Log("Norm");
             }    
         }
     }

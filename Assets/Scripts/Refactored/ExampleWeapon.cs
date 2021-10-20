@@ -8,29 +8,35 @@ using Valve.VR.InteractionSystem;
 
 public class ExampleWeapon : MonoBehaviour
 {
-    [SerializeField] private Transform BarrelLocation;
-    [SerializeField] private GameObject bulletPrefab;//префаб пули
-    [SerializeField] private int _damage; //из инспектора на каждом оружии прописываем его урон
-    [SerializeField] private float fireRate; //в миллисекундах, для каждого оружия из инспектора будем прописывать частоту (раз в сколько миллисек может стрелять)
+   // [SerializeField] private GameObject _bulletPrefab;//префаб пули
+    [SerializeField] private GameObject _muzzleFlashPrefab; //дульная вспышка
+    [SerializeField] private GameObject _casingPrefab;
+
+    [SerializeField] private Transform _barrelLocation;
+    [SerializeField] private Transform _casingExitLocation;
+
+    [SerializeField] private Animator _gunAnimator;
+
+    [SerializeField] private float _fireRate; //в миллисекундах, для каждого оружия из инспектора будем прописывать частоту (раз в сколько миллисек может стрелять)
     [SerializeField] private int _weaponId; //какой тип оружия, из описанных выше
-    [SerializeField] private GameObject casingPrefab;
-    [SerializeField] private Transform casingExitLocation;
+    [SerializeField] private int _damage; //из инспектора на каждом оружии прописываем его урон
+
+    private GameObject _magazine;
+
     private float _ejectPower = 150f;
+    private float _nextShootTime;
+
+    private int _minCorner = 1, _maxCorner = 8; //для отдачи
+    private int _bulletSpeed = 500;
+
+    private bool _hasSlide = true;    
+    private bool _pressedButton;   
+    private bool _OnPress;
 
     private Interactable interactable;
     public SteamVR_Behaviour_Pose Pos = null; // Хранит правый контроллер - поле назначается из редактора Unity
     private SteamVR_Action_Boolean buttonGrabPinch = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("GrabPinch");
-    private SteamVR_Action_Boolean buttonGrabGrip = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("GrabGrip");
-    bool OnPress;
-
-    [SerializeField] private Animator gunAnimator;
-    private bool hasSlide = true;
-    private GameObject magazine;
-    private float _nextShootTime;
-    private bool pressedButton;
-
-    int _minCorner = 1, _maxCorner = 8; //для отдачи
-    int _bulletSpeed = 500;
+    private SteamVR_Action_Boolean buttonGrabGrip = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("GrabGrip");  
 
     private void Start()
     {
@@ -38,69 +44,82 @@ public class ExampleWeapon : MonoBehaviour
         for(int i = 0; i < transform.childCount; i++)
         {
             if (transform.GetChild(i).TryGetComponent(out Magazine _))
-                magazine = transform.GetChild(i).gameObject;
+                _magazine = transform.GetChild(i).gameObject;
         }
-        gunAnimator = GetComponent<Animator>();
+        _gunAnimator = GetComponent<Animator>();
     }
 
     private void Update()
     {
-        if (buttonGrabPinch.GetStateDown(Pos.inputSource) || Input.GetKey(KeyCode.Space))
+        if ((buttonGrabPinch.GetState(Pos.inputSource) || Input.GetKey(KeyCode.Space)) && _pressedButton == false)
         {
             if(transform.parent)
             {
                 if (transform.parent.TryGetComponent(out Valve.VR.InteractionSystem.Hand _))
                 {
-                    switch (_weaponId)
+                    if (CheckOfPossibilityShoot())
                     {
-                        case 1:
-                            if (CheckOfPossibilityShoot())
-                            {
-                                gunAnimator.SetTrigger("Fire");
-                                _nextShootTime = Time.time + 1f / fireRate;
-                            }
-                            break;
-                        case 2:
-                            if (CheckOfPossibilityShoot())
-                            {
-                                gunAnimator.SetTrigger("Fire");
-                                pressedButton = true;
-                            }
-                            break;
-                        case 3:
-                            if (CheckOfPossibilityShoot())
-                            {
-                                gunAnimator.SetTrigger("Fire");
-                                hasSlide = false;
-                                pressedButton = true;
-                            }
-                            break;
+                        _gunAnimator.SetTrigger("Fire");
+                        switch (_weaponId)
+                        {
+                            case 1:
+                                if(CheckOfPossibilityShoot())
+                                {
+                                    Debug.Log("NORMIk");
+                                    _nextShootTime = Time.time + 1f / _fireRate;
+                                }  
+                                break;
+                            case 2:
+                                _pressedButton = true;
+                                break;
+                            case 3:
+                                _hasSlide = false;
+                                _pressedButton = true;
+                                break;
+                        }
                     }
                 }
+                
             } 
         }
 
-        if(buttonGrabGrip.GetStateDown(Pos.inputSource) || Input.GetKeyDown(KeyCode.R)) // вдруг уже нету магаза
+        if (Input.GetKeyDown(KeyCode.T))
         {
-            if(magazine)
+            Debug.Log(_hasSlide);
+            Debug.Log(_magazine);
+            Debug.Log(_weaponId);
+            Debug.Log("Time.time = " + Time.time + " ; NextShoot = " + _nextShootTime);
+        }
+
+        if (buttonGrabGrip.GetStateDown(Pos.inputSource) || Input.GetKeyDown(KeyCode.R)) // вдруг уже нету магаза
+        {
+            if (transform.parent)
             {
-                magazine.GetComponent<Magazine>().Detach();
+                if (transform.parent.TryGetComponent(out Valve.VR.InteractionSystem.Hand _))
+                {
+                    if (_magazine)
+                    {
+                        _magazine.GetComponent<Magazine>().Detach();
+                    }
+                }
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.T)) Debug.Log(hasSlide);
+
+
+
 
         //if (Input.GetKeyUp(KeyCode.Space)) pressedButton = false;
-        if (buttonGrabPinch.GetStateUp(Pos.inputSource)) pressedButton = false;
+        if (buttonGrabPinch.GetStateUp(Pos.inputSource)) _pressedButton = false;
     }
 
     private bool CheckOfPossibilityShoot() //пока без дробовиков
     {
-        if (hasSlide)
+        if (_hasSlide)
         {
-            if (magazine) //для шотгана как вариант сделать пустышку 
+            if (_magazine) //для шотгана как вариант сделать пустышку 
             {
-                if (magazine.GetComponent<Magazine>().GetAmmo() > 0)
+                if (_magazine.GetComponent<Magazine>().GetAmmo() > 0)
                 {
                     switch (_weaponId)
                     {
@@ -108,10 +127,10 @@ public class ExampleWeapon : MonoBehaviour
                             if (Time.time > _nextShootTime) return true;
                             else return false;
                         case 2: //semi-auto
-                            if (pressedButton == false) return true;
+                            if (_pressedButton == false) return true;
                             else return false;
                         case 3: //need slide every shoot 
-                            if (pressedButton == false) return true;
+                            if (_pressedButton == false) return true;
                             else return false;
 
                     }
@@ -130,41 +149,48 @@ public class ExampleWeapon : MonoBehaviour
 
     private void Shoot(GameObject bullet)
     {
-        GameObject tempBullet = Instantiate(bullet, BarrelLocation.position, BarrelLocation.rotation * Quaternion.identity);
+        GameObject tempBullet = Instantiate(bullet, _barrelLocation.position, _barrelLocation.rotation * Quaternion.identity);
         tempBullet.GetComponent<BulletNew>().SetDamage(_damage);
-        tempBullet.GetComponent<Rigidbody>().AddForce(BarrelLocation.right * _bulletSpeed);
-        Recoil(transform);
-        magazine.GetComponent<Magazine>().DecreaseAmmo();
-        //flash, sound
+        tempBullet.GetComponent<Rigidbody>().AddForce(_barrelLocation.right * _bulletSpeed);
+        //Recoil(transform);
+        _magazine.GetComponent<Magazine>().DecreaseAmmo();
+
+        if (_muzzleFlashPrefab)
+        {
+            GameObject _tempFlash;
+            _tempFlash = Instantiate(_muzzleFlashPrefab, _barrelLocation.position, _barrelLocation.rotation);
+            Destroy(_tempFlash, 1f);
+        }
+        // sound
     }
 
     private void CasingRelease()
     {
-        GameObject tempCasing;
-        tempCasing = Instantiate(casingPrefab, casingExitLocation.position, casingExitLocation.rotation) as GameObject;
-        tempCasing.GetComponent<Rigidbody>().AddExplosionForce(Random.Range(_ejectPower * 0.7f, _ejectPower), (casingExitLocation.position - casingExitLocation.right * 0.3f - casingExitLocation.up * 0.6f), 1f);
-        tempCasing.GetComponent<Rigidbody>().AddTorque(new Vector3(0, Random.Range(100f, 500f), Random.Range(100f, 1000f)), ForceMode.Impulse);
-        Destroy(tempCasing, 5);
+        GameObject _tempCasing;
+        _tempCasing = Instantiate(_casingPrefab, _casingExitLocation.position, _casingExitLocation.rotation) as GameObject;
+        _tempCasing.GetComponent<Rigidbody>().AddExplosionForce(Random.Range(_ejectPower * 0.7f, _ejectPower), (_casingExitLocation.position - _casingExitLocation.right * 0.3f - _casingExitLocation.up * 0.6f), 1f);
+        _tempCasing.GetComponent<Rigidbody>().AddTorque(new Vector3(0, Random.Range(100f, 500f), Random.Range(100f, 1000f)), ForceMode.Impulse);
+        Destroy(_tempCasing, 5);
     }
 
     public void ClearMagazineSlot()
     {
-        magazine = null;
+        _magazine = null;
     }
 
     public void SetMagazine(GameObject mag)
     {
-        magazine = mag;
+        _magazine = mag;
     }
 
     public void Slide()
     {
-        hasSlide = true;
+        _hasSlide = true;
     }
 
     public void NegativeSlide()
     {
-        hasSlide = false;
+        _hasSlide = false;
     }
 
     public int GetWeaponId()

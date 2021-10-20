@@ -11,6 +11,9 @@ TagManager:
   - AutoShotgunMagazine
   - Enemy
   - ShotgunBullet
+  - Weapon
+  - SetWeapon
+  - WeaponOK
   layers:
   - Default
   - TransparentFX

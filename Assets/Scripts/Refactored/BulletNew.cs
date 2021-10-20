@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class BulletNew : MonoBehaviour
 {
-    int _damage;
+    [SerializeField] private GameObject _wallHitEffect;
+    [SerializeField] private GameObject _enemyHitEffect;
+    private int _damage;
 
     public void SetDamage(int _dam)
     {
@@ -15,10 +17,16 @@ public class BulletNew : MonoBehaviour
     {
         if (col.gameObject.TryGetComponent(out EnemyNew enem))
         {
-            enem.GetDamage(_damage); //если будет компонент энеми, значит это враг, если нет, то просто на месте удара сделать дырку или что-то типа того
+            enem.GetDamage(_damage);
+            ContactPoint contactPoint = col.contacts[0];
+            GameObject temp = Instantiate(_enemyHitEffect, contactPoint.point, Quaternion.LookRotation(contactPoint.normal));
+            temp.transform.SetParent(contactPoint.otherCollider.transform);
         }
         else
         {
+            ContactPoint contactPoint = col.contacts[0];
+            GameObject temp = Instantiate(_wallHitEffect, contactPoint.point, Quaternion.LookRotation(contactPoint.normal));
+            temp.transform.SetParent(contactPoint.otherCollider.transform);
             Destroy(gameObject);
         }
     }

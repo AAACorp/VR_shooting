@@ -599,103 +599,103 @@ namespace Valve.VR.InteractionSystem
         public void DetachObject(GameObject objectToDetach, bool restoreOriginalParent = true)
         {
            if (objectToDetach.tag != "Weapon")
-           { 
+           {
                 int index = attachedObjects.FindIndex(l => l.attachedObject == objectToDetach);
-            if (index != -1)
-            {
-                if (spewDebugText)
-                    HandDebugLog("DetachObject " + objectToDetach);
-
-                GameObject prevTopObject = currentAttachedObject;
-
-
-                if (attachedObjects[index].interactable != null)
+                if (index != -1)
                 {
-                    if (attachedObjects[index].interactable.hideHandOnAttach)
-                        Show();
+                    if (spewDebugText)
+                        HandDebugLog("DetachObject " + objectToDetach);
 
-                    if (attachedObjects[index].interactable.hideSkeletonOnAttach && mainRenderModel != null && mainRenderModel.displayHandByDefault)
-                        ShowSkeleton();
+                    GameObject prevTopObject = currentAttachedObject;
 
-                    if (attachedObjects[index].interactable.hideControllerOnAttach && mainRenderModel != null && mainRenderModel.displayControllerByDefault)
-                        ShowController();
 
-                    if (attachedObjects[index].interactable.handAnimationOnPickup != 0)
-                        StopAnimation();
-
-                    if (attachedObjects[index].interactable.setRangeOfMotionOnPickup != SkeletalMotionRangeChange.None)
-                        ResetTemporarySkeletonRangeOfMotion();
-                }
-
-                Transform parentTransform = null;
-                if (attachedObjects[index].isParentedToHand)
-                {
-                    if (restoreOriginalParent && (attachedObjects[index].originalParent != null))
+                    if (attachedObjects[index].interactable != null)
                     {
-                        parentTransform = attachedObjects[index].originalParent.transform;
+                        if (attachedObjects[index].interactable.hideHandOnAttach)
+                            Show();
+
+                        if (attachedObjects[index].interactable.hideSkeletonOnAttach && mainRenderModel != null && mainRenderModel.displayHandByDefault)
+                            ShowSkeleton();
+
+                        if (attachedObjects[index].interactable.hideControllerOnAttach && mainRenderModel != null && mainRenderModel.displayControllerByDefault)
+                            ShowController();
+
+                        if (attachedObjects[index].interactable.handAnimationOnPickup != 0)
+                            StopAnimation();
+
+                        if (attachedObjects[index].interactable.setRangeOfMotionOnPickup != SkeletalMotionRangeChange.None)
+                            ResetTemporarySkeletonRangeOfMotion();
                     }
 
-                    if (attachedObjects[index].attachedObject != null)
+                    Transform parentTransform = null;
+                    if (attachedObjects[index].isParentedToHand)
                     {
-                        attachedObjects[index].attachedObject.transform.parent = parentTransform;
-                    }
-                }
+                        if (restoreOriginalParent && (attachedObjects[index].originalParent != null))
+                        {
+                            parentTransform = attachedObjects[index].originalParent.transform;
+                        }
 
-                if (attachedObjects[index].HasAttachFlag(AttachmentFlags.TurnOnKinematic))
-                {
-                    if (attachedObjects[index].attachedRigidbody != null)
-                    {
-                        attachedObjects[index].attachedRigidbody.isKinematic = attachedObjects[index].attachedRigidbodyWasKinematic;
-                        attachedObjects[index].attachedRigidbody.collisionDetectionMode = attachedObjects[index].collisionDetectionMode;
+                        if (attachedObjects[index].attachedObject != null)
+                        {
+                            attachedObjects[index].attachedObject.transform.parent = parentTransform;
+                        }
                     }
-                }
 
-                if (attachedObjects[index].HasAttachFlag(AttachmentFlags.TurnOffGravity))
-                {
-                    if (attachedObjects[index].attachedObject != null)
+                    if (attachedObjects[index].HasAttachFlag(AttachmentFlags.TurnOnKinematic))
                     {
                         if (attachedObjects[index].attachedRigidbody != null)
-                            attachedObjects[index].attachedRigidbody.useGravity = attachedObjects[index].attachedRigidbodyUsedGravity;
+                        {
+                            attachedObjects[index].attachedRigidbody.isKinematic = attachedObjects[index].attachedRigidbodyWasKinematic;
+                            attachedObjects[index].attachedRigidbody.collisionDetectionMode = attachedObjects[index].collisionDetectionMode;
+                        }
+                    }
+
+                    if (attachedObjects[index].HasAttachFlag(AttachmentFlags.TurnOffGravity))
+                    {
+                        if (attachedObjects[index].attachedObject != null)
+                        {
+                            if (attachedObjects[index].attachedRigidbody != null)
+                                attachedObjects[index].attachedRigidbody.useGravity = attachedObjects[index].attachedRigidbodyUsedGravity;
+                        }
+                    }
+
+                    if (attachedObjects[index].interactable != null && attachedObjects[index].interactable.handFollowTransform && HasSkeleton())
+                    {
+                        skeleton.transform.localPosition = Vector3.zero;
+                        skeleton.transform.localRotation = Quaternion.identity;
+                    }
+
+                    if (attachedObjects[index].attachedObject != null)
+                    {
+                        if (attachedObjects[index].interactable == null || (attachedObjects[index].interactable != null && attachedObjects[index].interactable.isDestroying == false))
+                            attachedObjects[index].attachedObject.SetActive(true);
+
+                        attachedObjects[index].attachedObject.SendMessage("OnDetachedFromHand", this, SendMessageOptions.DontRequireReceiver);
+                    }
+
+                    attachedObjects.RemoveAt(index);
+
+                    CleanUpAttachedObjectStack();
+
+                    GameObject newTopObject = currentAttachedObject;
+
+                    hoverLocked = false;
+
+
+                    //Give focus to the top most object on the stack if it changed
+                    if (newTopObject != null && newTopObject != prevTopObject)
+                    {
+                        newTopObject.SetActive(true);
+                        newTopObject.SendMessage("OnHandFocusAcquired", this, SendMessageOptions.DontRequireReceiver);
                     }
                 }
-
-                if (attachedObjects[index].interactable != null && attachedObjects[index].interactable.handFollowTransform && HasSkeleton())
-                {
-                    skeleton.transform.localPosition = Vector3.zero;
-                    skeleton.transform.localRotation = Quaternion.identity;
-                }
-
-                if (attachedObjects[index].attachedObject != null)
-                {
-                    if (attachedObjects[index].interactable == null || (attachedObjects[index].interactable != null && attachedObjects[index].interactable.isDestroying == false))
-                        attachedObjects[index].attachedObject.SetActive(true);
-
-                    attachedObjects[index].attachedObject.SendMessage("OnDetachedFromHand", this, SendMessageOptions.DontRequireReceiver);
-                }
-
-                attachedObjects.RemoveAt(index);
 
                 CleanUpAttachedObjectStack();
 
-                GameObject newTopObject = currentAttachedObject;
-
-                hoverLocked = false;
-
-
-                //Give focus to the top most object on the stack if it changed
-                if (newTopObject != null && newTopObject != prevTopObject)
-                {
-                    newTopObject.SetActive(true);
-                    newTopObject.SendMessage("OnHandFocusAcquired", this, SendMessageOptions.DontRequireReceiver);
-                }
-            }
-
-            CleanUpAttachedObjectStack();
-
-            if (mainRenderModel != null)
-                mainRenderModel.MatchHandToTransform(mainRenderModel.transform);
-            if (hoverhighlightRenderModel != null)
-                hoverhighlightRenderModel.MatchHandToTransform(hoverhighlightRenderModel.transform);
+                if (mainRenderModel != null)
+                    mainRenderModel.MatchHandToTransform(mainRenderModel.transform);
+                if (hoverhighlightRenderModel != null)
+                    hoverhighlightRenderModel.MatchHandToTransform(hoverhighlightRenderModel.transform);
            }
         }
 

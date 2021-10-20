@@ -24,5 +24,16 @@ public class DetachWeapon : MonoBehaviour
             StartCoroutine(returnTag()); // Закускаем корутину для обратной смены тега на "Weapon"
         }
     }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.N))
+        {
+            // Временно меняем тег оружия, чтобы сработало событие DetachObject из скрипта Hand (событие изменено)
+            tag = "WeaponOK";
+            StartCoroutine(returnTag()); // Закускаем корутину для обратной смены тега на "Weapon"
+        }
+    }
+
 } 
 
