@@ -177,6 +177,7 @@ MonoBehaviour:
     type: 3}
   _enemyHitEffect: {fileID: 1743301284569550, guid: ad2ab49d0a2a17148bd51c93d977bdbc,
     type: 3}
+  _mesh: {fileID: 2143278740137746008}
 --- !u!1 &2143278740137746008
 GameObject:
   m_ObjectHideFlags: 0

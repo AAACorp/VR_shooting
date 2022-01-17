@@ -5,7 +5,7 @@ using UnityEngine;
 public class ReloadSystem : MonoBehaviour
 {
     private bool magazineInSlot = true;
-    [SerializeField] private Transform connectPoint;
+    [SerializeField] private Transform connectingPoint;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -16,7 +16,7 @@ public class ReloadSystem : MonoBehaviour
                 ExampleWeapon exmWeapon = GetComponentInParent(typeof(ExampleWeapon)) as ExampleWeapon;
                 if (exmWeapon.GetWeaponId() == magazineComp.GetWeaponId())
                 {
-                    AttachMagazine(connectPoint, other.gameObject);
+                    AttachMagazine(connectingPoint, other.gameObject);
                     exmWeapon.SetMagazine(other.gameObject);
                 }
             }
@@ -25,7 +25,7 @@ public class ReloadSystem : MonoBehaviour
 
     public Vector3 GetPointToAttach()
     {
-        return connectPoint.position;
+        return connectingPoint.position;
     }
 
     public void SetSlotFalse()

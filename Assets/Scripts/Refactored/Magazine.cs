@@ -14,8 +14,11 @@ public class Magazine : MonoBehaviour
     {
         if (transform.parent)
         {
-            magazineInWeapon = true;
-            SetReloadCollider();
+            if(transform.parent.TryGetComponent(out ExampleWeapon _))
+            {
+                magazineInWeapon = true;
+                SetReloadCollider();
+            }
         }
         else magazineInWeapon = false;
     }

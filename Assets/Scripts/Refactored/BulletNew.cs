@@ -6,6 +6,8 @@ public class BulletNew : MonoBehaviour
 {
     [SerializeField] private GameObject _wallHitEffect;
     [SerializeField] private GameObject _enemyHitEffect;
+    [SerializeField] private GameObject _mesh;
+
     private int _damage;
 
     public void SetDamage(int _dam)
@@ -15,6 +17,10 @@ public class BulletNew : MonoBehaviour
 
     void OnCollisionEnter(Collision col)// исходя из mode рассчитать урон по col
     {
+        transform.SetParent(col.transform);
+        _mesh.SetActive(false);
+        GetComponent<BoxCollider>().enabled = false;
+        
         if (col.gameObject.TryGetComponent(out EnemyNew enem))
         {
             enem.GetDamage(_damage);
@@ -27,7 +33,8 @@ public class BulletNew : MonoBehaviour
             ContactPoint contactPoint = col.contacts[0];
             GameObject temp = Instantiate(_wallHitEffect, contactPoint.point, Quaternion.LookRotation(contactPoint.normal));
             temp.transform.SetParent(contactPoint.otherCollider.transform);
-            Destroy(gameObject);
+            Debug.Log(col.gameObject.name);
+            Destroy(gameObject,1f);
         }
     }
 }

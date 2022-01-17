@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿// Мануал по замене
+// В самом оружии кидаем скрипт этот и удаляем предыдущий. В анимации меняем патрон. В слайдере заменяем Слайд на новый (с этого скрипта). В релоад коллайдер
+// релоад систем пихаем, старое удаляем. Магазин: берем меш, пихаем в пустой объект, у него коллайдер, ригидбади и скрипт магазин, айдишники меняем. Мейн тег на 
+// веапон меняем
+//
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
@@ -18,7 +23,8 @@ public class ExampleWeapon : MonoBehaviour
     [SerializeField] private Animator _gunAnimator;
 
     [SerializeField] private float _fireRate; //в миллисекундах, для каждого оружия из инспектора будем прописывать частоту (раз в сколько миллисек может стрелять)
-    [SerializeField] private int _weaponId; //какой тип оружия, из описанных выше
+    [SerializeField] private int _weaponId; //какое оружие (автомат, смг или что-то другое)
+    [SerializeField] private int _weaponType; //какой тип оружия (автоматическое, полуавтоматическое, дробаш)
     [SerializeField] private int _damage; //из инспектора на каждом оружии прописываем его урон
 
     private GameObject _magazine;
@@ -60,20 +66,30 @@ public class ExampleWeapon : MonoBehaviour
                     if (CheckOfPossibilityShoot())
                     {
                         _gunAnimator.SetTrigger("Fire");
-                        switch (_weaponId)
+                        switch (_weaponType)
                         {
                             case 1:
                                 if(CheckOfPossibilityShoot())
                                 {
-                                    Debug.Log("NORMIk");
+                                    Debug.Log("Shooted (Exm Weapon 73)");
                                     _nextShootTime = Time.time + 1f / _fireRate;
+                                    //Debug.Log("transform = " + transform.parent.transform.position);
+                                    //transform.parent.transform.position += new Vector3(0f, 1f, 0f); //не работает, слишком быстро на место встает
+                                    //тут руку подкидывать (с помощью 61 строка) все попробовать в vr, мейби что-то там сработает
+                                    //transform.parent.GetComponent<Rigidbody>().AddForceAtPosition(Vector3.up*10, transform.parent.transform.position);
+                                    //GetComponent<Rigidbody>().AddForceAtPosition(Vector3.up, _barrelLocation.transform.position);
+                                    //transform.Rotate(10f, 0f, 0f, Space.Self);
+                                    //transform.parent.transform.Rotate(10f, 0f, 0f, Space.Self);
                                 }  
                                 break;
                             case 2:
                                 _pressedButton = true;
                                 break;
                             case 3:
+                                Debug.Log("has slide = " + _hasSlide);
+                                Debug.Log("Shooted");
                                 _hasSlide = false;
+                                Debug.Log("has slide = " + _hasSlide);
                                 _pressedButton = true;
                                 break;
                         }
@@ -109,7 +125,7 @@ public class ExampleWeapon : MonoBehaviour
 
 
 
-        //if (Input.GetKeyUp(KeyCode.Space)) pressedButton = false;
+        if (Input.GetKeyUp(KeyCode.Space)) _pressedButton = false;
         if (buttonGrabPinch.GetStateUp(Pos.inputSource)) _pressedButton = false;
     }
 
@@ -121,7 +137,7 @@ public class ExampleWeapon : MonoBehaviour
             {
                 if (_magazine.GetComponent<Magazine>().GetAmmo() > 0)
                 {
-                    switch (_weaponId)
+                    switch (_weaponType)
                     {
                         case 1: //auto
                             if (Time.time > _nextShootTime) return true;
@@ -170,7 +186,7 @@ public class ExampleWeapon : MonoBehaviour
         _tempCasing = Instantiate(_casingPrefab, _casingExitLocation.position, _casingExitLocation.rotation) as GameObject;
         _tempCasing.GetComponent<Rigidbody>().AddExplosionForce(Random.Range(_ejectPower * 0.7f, _ejectPower), (_casingExitLocation.position - _casingExitLocation.right * 0.3f - _casingExitLocation.up * 0.6f), 1f);
         _tempCasing.GetComponent<Rigidbody>().AddTorque(new Vector3(0, Random.Range(100f, 500f), Random.Range(100f, 1000f)), ForceMode.Impulse);
-        Destroy(_tempCasing, 5);
+        Destroy(_tempCasing, 10f);
     }
 
     public void ClearMagazineSlot()
