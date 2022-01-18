@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 public class Magazine : MonoBehaviour
 {
     [SerializeField] private int _ammo = 0;
@@ -83,6 +84,7 @@ public class Magazine : MonoBehaviour
         {
             gameObject.GetComponent<Rigidbody>().isKinematic = false;
             ExampleWeapon exmWeapon = GetComponentInParent(typeof(ExampleWeapon)) as ExampleWeapon;
+            gameObject.AddComponent<Throwable>();
             exmWeapon.NegativeSlide();
             exmWeapon.ClearMagazineSlot();
         }

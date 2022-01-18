@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Valve.VR;
+using Valve.VR.InteractionSystem;
 
 public class ReloadSystem : MonoBehaviour
 {
@@ -41,5 +43,10 @@ public class ReloadSystem : MonoBehaviour
         nonConnectedMagazine.transform.rotation = pointToAttach.rotation;
         magazineInSlot = true;
         nonConnectedMagazine.GetComponent<Magazine>().SetMagazineInWeapon();
+        Destroy(nonConnectedMagazine.GetComponent<Throwable>());
+        Destroy(nonConnectedMagazine.GetComponent<Interactable>());
     }
 }
+// Когда нажимаешь на перезарядку, магаз падает, все ок, но потом, когда ты одной рукой держишь автомат, а другой магазин подносишь, то он не сразу коннектится.
+// Присоедененное оружие не имеет коллайдера как-будто, но коллайдеры есть
+// Надо, что когда магаз в оружии, то удалять тхроваблы

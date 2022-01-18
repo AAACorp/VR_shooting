@@ -78,7 +78,7 @@ public class ExampleWeapon : MonoBehaviour
                                     //тут руку подкидывать (с помощью 61 строка) все попробовать в vr, мейби что-то там сработает
                                     //transform.parent.GetComponent<Rigidbody>().AddForceAtPosition(Vector3.up*10, transform.parent.transform.position);
                                     //GetComponent<Rigidbody>().AddForceAtPosition(Vector3.up, _barrelLocation.transform.position);
-                                    //transform.Rotate(10f, 0f, 0f, Space.Self);
+                                    transform.Rotate(0f, 3f, 0f, Space.Self);
                                     //transform.parent.transform.Rotate(10f, 0f, 0f, Space.Self);
                                 }  
                                 break;
