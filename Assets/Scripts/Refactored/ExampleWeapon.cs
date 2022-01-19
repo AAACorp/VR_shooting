@@ -36,8 +36,7 @@ public class ExampleWeapon : MonoBehaviour
     private int _bulletSpeed = 500;
 
     private bool _hasSlide = true;    
-    private bool _pressedButton;   
-    private bool _OnPress;
+    private bool _pressedButton;
 
     private Interactable interactable;
     public SteamVR_Behaviour_Pose Pos = null; // Хранит правый контроллер - поле назначается из редактора Unity
@@ -73,13 +72,8 @@ public class ExampleWeapon : MonoBehaviour
                                 {
                                     Debug.Log("Shooted (Exm Weapon 73)");
                                     _nextShootTime = Time.time + 1f / _fireRate;
-                                    //Debug.Log("transform = " + transform.parent.transform.position);
-                                    //transform.parent.transform.position += new Vector3(0f, 1f, 0f); //не работает, слишком быстро на место встает
-                                    //тут руку подкидывать (с помощью 61 строка) все попробовать в vr, мейби что-то там сработает
-                                    //transform.parent.GetComponent<Rigidbody>().AddForceAtPosition(Vector3.up*10, transform.parent.transform.position);
-                                    //GetComponent<Rigidbody>().AddForceAtPosition(Vector3.up, _barrelLocation.transform.position);
                                     transform.Rotate(0f, 3f, 0f, Space.Self);
-                                    //transform.parent.transform.Rotate(10f, 0f, 0f, Space.Self);
+                                    //transform.parent.transform.Rotate(10f, 0f, 0f, Space.Self); // не чекнул вроде
                                 }  
                                 break;
                             case 2:

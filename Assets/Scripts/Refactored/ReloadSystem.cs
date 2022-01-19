@@ -18,6 +18,7 @@ public class ReloadSystem : MonoBehaviour
                 ExampleWeapon exmWeapon = GetComponentInParent(typeof(ExampleWeapon)) as ExampleWeapon;
                 if (exmWeapon.GetWeaponId() == magazineComp.GetWeaponId())
                 {
+                    magazineComp.DetachOfHand();
                     AttachMagazine(connectingPoint, other.gameObject);
                     exmWeapon.SetMagazine(other.gameObject);
                 }
@@ -39,14 +40,13 @@ public class ReloadSystem : MonoBehaviour
     {
         nonConnectedMagazine.transform.SetParent(transform.parent);
         nonConnectedMagazine.GetComponent<Rigidbody>().isKinematic = true;
+        nonConnectedMagazine.GetComponent<Magazine>().RemoveInteraction();
         nonConnectedMagazine.transform.position = pointToAttach.position;
         nonConnectedMagazine.transform.rotation = pointToAttach.rotation;
         magazineInSlot = true;
         nonConnectedMagazine.GetComponent<Magazine>().SetMagazineInWeapon();
-        Destroy(nonConnectedMagazine.GetComponent<Throwable>());
-        Destroy(nonConnectedMagazine.GetComponent<Interactable>());
     }
 }
-// Когда нажимаешь на перезарядку, магаз падает, все ок, но потом, когда ты одной рукой держишь автомат, а другой магазин подносишь, то он не сразу коннектится.
-// Присоедененное оружие не имеет коллайдера как-будто, но коллайдеры есть
-// Надо, что когда магаз в оружии, то удалять тхроваблы
+// Когда нажимаешь на перезарядку, магаз падает, все ок, но потом, когда ты одной рукой держишь автомат, а другой магазин подносишь, то он не сразу коннектится. - da
+// Присоедененное оружие не имеет коллайдера как-будто, но коллайдеры есть - net
+// Надо, что когда магаз в оружии, то удалять тхроваблы - da

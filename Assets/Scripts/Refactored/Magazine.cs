@@ -19,6 +19,7 @@ public class Magazine : MonoBehaviour
             {
                 magazineInWeapon = true;
                 SetReloadCollider();
+                RemoveInteraction();
             }
         }
         else magazineInWeapon = false;
@@ -84,9 +85,34 @@ public class Magazine : MonoBehaviour
         {
             gameObject.GetComponent<Rigidbody>().isKinematic = false;
             ExampleWeapon exmWeapon = GetComponentInParent(typeof(ExampleWeapon)) as ExampleWeapon;
-            gameObject.AddComponent<Throwable>();
+
+            if (gameObject.TryGetComponent(out Throwable _) == false)
+            {
+                //gameObject.AddComponent<Interactable>();
+                gameObject.GetComponent<Interactable>().enabled = true;
+                gameObject.AddComponent<Throwable>();
+            }
+
             exmWeapon.NegativeSlide();
             exmWeapon.ClearMagazineSlot();
+        }
+    }
+
+    public void DetachOfHand()
+    {
+        if (transform.parent.TryGetComponent(out Hand hand))
+        {
+            hand.DetachObject(gameObject);
+        }
+    }
+
+    public void RemoveInteraction()
+    {
+        if(gameObject.TryGetComponent(out Throwable _))
+        {
+            Destroy(gameObject.GetComponent<Throwable>());
+            //Destroy(gameObject.GetComponent<Interactable>());
+            gameObject.GetComponent<Interactable>().enabled = false;
         }
     }
 
