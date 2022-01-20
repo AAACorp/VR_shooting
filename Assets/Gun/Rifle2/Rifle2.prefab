@@ -354,7 +354,7 @@ GameObject:
   - component: {fileID: 398325993056330930}
   - component: {fileID: 5301963706438100896}
   - component: {fileID: 6512517472428112680}
-  - component: {fileID: 624587212}
+  - component: {fileID: 885627073}
   m_Layer: 0
   m_Name: ReloadCollider
   m_TagString: Untagged
@@ -437,7 +437,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &624587212
+--- !u!114 &885627073
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -446,11 +446,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1799067793165121667}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d3d1658d0c1f314193f16e57a8d69df, type: 3}
+  m_Script: {fileID: 11500000, guid: a2067090400a64f41a17f2b10dafa2ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlaceForMagazine: {fileID: 1539269299378464041}
-  hasSlide: 1
+  connectingPoint: {fileID: 4536565214234876311}
 --- !u!1 &2030330527393800501
 GameObject:
   m_ObjectHideFlags: 0
@@ -710,18 +709,7 @@ MonoBehaviour:
   OnReached:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1133349703}
-        m_MethodName: Slide
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 624587212}
+      - m_Target: {fileID: 793472422}
         m_MethodName: Slide
         m_Mode: 1
         m_Arguments:
@@ -827,6 +815,112 @@ ConfigurableJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &1287620331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2059679882675088365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffefbea063cab884ca33e5a449e5c22c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attachmentFlags: 44
+  attachmentOffset: {fileID: 0}
+  catchingSpeedThreshold: -1
+  releaseVelocityStyle: 1
+  releaseVelocityTimeOffset: -0.011
+  scaleReleaseVelocity: 1.1
+  scaleReleaseVelocityThreshold: -1
+  scaleReleaseVelocityCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  restoreOriginalParent: 0
+  onPickUp:
+    m_PersistentCalls:
+      m_Calls: []
+  onDetachFromHand:
+    m_PersistentCalls:
+      m_Calls: []
+  onHeldUpdate:
+    m_PersistentCalls:
+      m_Calls: []
+  interactable: {fileID: 0}
+--- !u!114 &1287620332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2059679882675088365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b93b6a877adcbf94c89a9d6e0c0e844d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activateActionSetOnAttach:
+    actionSetPath: 
+  hideHandOnAttach: 1
+  hideSkeletonOnAttach: 0
+  hideControllerOnAttach: 0
+  handAnimationOnPickup: 0
+  setRangeOfMotionOnPickup: -1
+  useHandObjectAttachmentPoint: 1
+  attachEaseIn: 0
+  snapAttachEaseInCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  snapAttachEaseInTime: 0.15
+  snapAttachEaseInCompleted: 0
+  skeletonPoser: {fileID: 0}
+  handFollowTransform: 1
+  highlightOnHover: 1
+  hideHighlight: []
+  hoverPriority: 0
 --- !u!1 &2214374143500483987
 GameObject:
   m_ObjectHideFlags: 0
@@ -870,11 +964,11 @@ GameObject:
   - component: {fileID: 1133349706}
   - component: {fileID: 1133349705}
   - component: {fileID: 1133349704}
-  - component: {fileID: 1133349703}
   - component: {fileID: 1416321608}
+  - component: {fileID: 793472422}
   m_Layer: 0
   m_Name: Rifle2
-  m_TagString: Untagged
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -995,7 +1089,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 3
 --- !u!114 &1133349704
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1072,37 +1166,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   interactable: {fileID: 0}
---- !u!114 &1133349703
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3366875451775794349}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 145a08bb419f6644a9a8e8cae8434f33, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hand: {fileID: 0}
-  magazine: {fileID: 2059679882675088365}
-  casingPrefab: {fileID: 3669752227959138361, guid: 6f3c4810c6e8cce449e38567f610d9de,
-    type: 3}
-  PlaceForMagazine: {fileID: 1539269299378464041}
-  ReloadCollider: {fileID: 1799067793165121667}
-  hasSlide: 1
-  gunAnimator: {fileID: 2483984454768984570}
-  bulletPrefab: {fileID: 3365052644233884311, guid: 02d7df97ab9dfe5468d63df6ab2b4659,
-    type: 3}
-  muzzleFlashPrefab: {fileID: 1782395880954752, guid: da36faff3887eac468dbf92282f95c12,
-    type: 3}
-  barrelLocation: {fileID: 4040861691221630637}
-  casingExitLocation: {fileID: 6235733983227862017}
-  destroyTimer: 2
-  shotPower: 600
-  ejectPower: 150
-  recoilForce: 100
-  Pos: {fileID: 0}
 --- !u!114 &1416321608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1115,6 +1178,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 708d139894d0cae4b9ec9686653683ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &793472422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3366875451775794349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 125d580b136820c4eb4dcf3dd932628d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _muzzleFlashPrefab: {fileID: 1782395880954752, guid: da36faff3887eac468dbf92282f95c12,
+    type: 3}
+  _casingPrefab: {fileID: 2827818132162000034, guid: c60c0e4dbfe3f6a4a9b5b36fa0c99394,
+    type: 3}
+  _barrelLocation: {fileID: 4040861691221630637}
+  _casingExitLocation: {fileID: 6235733983227862017}
+  _gunAnimator: {fileID: 2483984454768984570}
+  _fireRate: 12
+  _weaponId: 3
+  _weaponType: 2
+  _damage: 20
+  Pos: {fileID: 0}
 --- !u!1 &3905393891158936078
 GameObject:
   m_ObjectHideFlags: 0
@@ -1887,7 +1974,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9008632608978916673}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.6653385, y: 0.00061338395, z: 0}
+  m_LocalPosition: {x: 0.691, y: 0.00061338395, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2734348864367912471}
@@ -1955,6 +2042,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1302268814886406594, guid: 29da520ac10193f4295395e8fce22659,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7035343128569576318, guid: 29da520ac10193f4295395e8fce22659,
         type: 3}
       propertyPath: m_Mass
@@ -1968,7 +2060,7 @@ PrefabInstance:
     - target: {fileID: 7386160281264234581, guid: 29da520ac10193f4295395e8fce22659,
         type: 3}
       propertyPath: m_Name
-      value: magazine
+      value: Semi-Auto magazine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 29da520ac10193f4295395e8fce22659, type: 3}

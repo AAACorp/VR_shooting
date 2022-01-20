@@ -105,6 +105,14 @@ namespace Valve.VR
             }
         }
         
+        public virtual SteamVR_Action_Boolean ReloadButton
+        {
+            get
+            {
+                return SteamVR_Actions.default_ReloadButton;
+            }
+        }
+        
         public virtual SteamVR_Action_Vibration Haptic
         {
             get

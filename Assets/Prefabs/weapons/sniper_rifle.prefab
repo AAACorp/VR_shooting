@@ -507,6 +507,20 @@ Transform:
   m_Father: {fileID: 6330373363510098558}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1581341631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1519011571909714891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e37f4c9537752d4ab10aeb3a18c5390, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _ammo: 15
+  _weaponId: 4
 --- !u!1 &3651317830229964129
 GameObject:
   m_ObjectHideFlags: 0
@@ -518,7 +532,7 @@ GameObject:
   - component: {fileID: 6030804186941808139}
   - component: {fileID: 5392223782801727984}
   - component: {fileID: 7045803534682363349}
-  - component: {fileID: 319832176}
+  - component: {fileID: 945900481}
   m_Layer: 0
   m_Name: ReloadCollider
   m_TagString: Untagged
@@ -562,7 +576,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &319832176
+--- !u!114 &945900481
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -571,11 +585,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3651317830229964129}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f05468575126c184bb332bf74c8bd996, type: 3}
+  m_Script: {fileID: 11500000, guid: a2067090400a64f41a17f2b10dafa2ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlaceForMagazine: {fileID: 8751644312772305010}
-  hasSlide: 1
+  connectingPoint: {fileID: 9009527604310434602}
 --- !u!1 &4507430549623637701
 GameObject:
   m_ObjectHideFlags: 0
@@ -630,7 +643,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6165664524747648739}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.49, y: 0.046, z: 0}
+  m_LocalPosition: {x: 1.596, y: 0.046, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6330373363510098558}
@@ -654,12 +667,12 @@ GameObject:
   - component: {fileID: 5361687409739293456}
   - component: {fileID: 8839889267552533458}
   - component: {fileID: 8139487262413750503}
-  - component: {fileID: 8069435114412196072}
   - component: {fileID: 349570284974343224}
   - component: {fileID: 1379924065}
+  - component: {fileID: 423551413}
   m_Layer: 12
   m_Name: sniper_rifle
-  m_TagString: Untagged
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -673,7 +686,7 @@ Transform:
   m_GameObject: {fileID: 6670343026779185348}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.47123, y: 0.47123, z: 0.47123}
   m_Children:
   - {fileID: 417650695268923732}
   - {fileID: 7000735320039043964}
@@ -928,37 +941,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   interactable: {fileID: 0}
---- !u!114 &8069435114412196072
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6670343026779185348}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5a0338ba57068a4ba1c4d0b84826443, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hand: {fileID: 0}
-  magazine: {fileID: 1519011571909714891}
-  casingPrefab: {fileID: 3669752227959138361, guid: 6f3c4810c6e8cce449e38567f610d9de,
-    type: 3}
-  PlaceForMagazine: {fileID: 8751644312772305010}
-  ReloadCollider: {fileID: 3651317830229964129}
-  hasSlide: 1
-  gunAnimator: {fileID: 349570284974343224}
-  bulletPrefab: {fileID: 3365052644233884311, guid: 02d7df97ab9dfe5468d63df6ab2b4659,
-    type: 3}
-  muzzleFlashPrefab: {fileID: 1782395880954752, guid: da36faff3887eac468dbf92282f95c12,
-    type: 3}
-  barrelLocation: {fileID: 3218520029726462075}
-  casingExitLocation: {fileID: 6427406158437679100}
-  destroyTimer: 2
-  shotPower: 600
-  ejectPower: 150
-  recoilForce: 100
-  Pos: {fileID: 0}
 --- !u!95 &349570284974343224
 Animator:
   serializedVersion: 3
@@ -990,6 +972,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 708d139894d0cae4b9ec9686653683ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &423551413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6670343026779185348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 125d580b136820c4eb4dcf3dd932628d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _muzzleFlashPrefab: {fileID: 1782395880954752, guid: da36faff3887eac468dbf92282f95c12,
+    type: 3}
+  _casingPrefab: {fileID: 2827818132162000034, guid: c60c0e4dbfe3f6a4a9b5b36fa0c99394,
+    type: 3}
+  _barrelLocation: {fileID: 3218520029726462075}
+  _casingExitLocation: {fileID: 6427406158437679100}
+  _gunAnimator: {fileID: 349570284974343224}
+  _fireRate: 12
+  _weaponId: 4
+  _weaponType: 3
+  _damage: 80
+  Pos: {fileID: 0}
 --- !u!54 &1201407087
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1030,7 +1036,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0.0001, z: 0}
   m_Axis: {x: -1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 0
-  m_ConnectedAnchor: {x: -0.56, y: 0.067, z: 0.1}
+  m_ConnectedAnchor: {x: -0.83, y: 0.067, z: 0.1}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: -1, z: 0}
   m_XMotion: 1
@@ -1121,7 +1127,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7668586737597508038}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a90a23b470b460498d8deef5806d57a, type: 3}
   m_Name: 
@@ -1131,18 +1137,7 @@ MonoBehaviour:
   OnReached:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8069435114412196072}
-        m_MethodName: Slide
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 319832176}
+      - m_Target: {fileID: 423551413}
         m_MethodName: Slide
         m_Mode: 1
         m_Arguments:
@@ -1386,9 +1381,10 @@ PrefabInstance:
     - target: {fileID: 1831915720116048788, guid: 8d0a9f2534259ba4baac32afbfdf797b,
         type: 3}
       propertyPath: m_Name
-      value: magazine
+      value: Sniper Rifle Magazine
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -9125632127611606957, guid: 8d0a9f2534259ba4baac32afbfdf797b, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8d0a9f2534259ba4baac32afbfdf797b, type: 3}
 --- !u!4 &2188551878790527345 stripped
 Transform:

@@ -41,7 +41,10 @@ public class ExampleWeapon : MonoBehaviour
     private Interactable interactable;
     public SteamVR_Behaviour_Pose Pos = null; // Хранит правый контроллер - поле назначается из редактора Unity
     private SteamVR_Action_Boolean buttonGrabPinch = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("GrabPinch");
-    private SteamVR_Action_Boolean buttonGrabGrip = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("GrabGrip");  
+    private SteamVR_Action_Boolean buttonGrabGrip = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("GrabGrip");
+    //private SteamVR_Action_Boolean _reloadButton = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("ReloadButton"); //потом
+    //public SteamVR_Action_Boolean _reloadAction;
+    //public SteamVR_Input_Sources handType;
 
     private void Start()
     {
@@ -56,6 +59,11 @@ public class ExampleWeapon : MonoBehaviour
 
     private void Update()
     {
+        //if (reloadButton.GetState(Pos.inputSource)) Debug.Log("Reload Pressed");// потом 2
+        //if(_reloadButton.GetStateDown(Pos.inputSource))
+        //Debug.Log("Reload Action");
+        //_reloadAction.GetState()
+
         if ((buttonGrabPinch.GetState(Pos.inputSource) || Input.GetKey(KeyCode.Space)) && _pressedButton == false)
         {
             if(transform.parent)
